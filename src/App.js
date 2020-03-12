@@ -1,25 +1,30 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-
 
 class App extends React.Component {
+
+  constructor() {
+    super();
+    this.state = {
+      message: 'please write on input',
+      count: 0,
+    }
+  }
+
+  update(e) {
+    this.setState({
+      message: e.target.value,
+      count: this.state.count + 1,
+    })
+  }
 
   render() {
     return (
       <div>
-        <strong>Hey {this.props.name}, your number is {this.props.count}</strong>
+        <input type="text" onChange={this.update.bind(this)} /> <br/>
+        <strong>{this.state.message}, you changed input {this.state.count} times</strong>
       </div>
     )
   }
-}
-
-App.propTypes = {
-  count: PropTypes.number.isRequired,
-  name: PropTypes.string,
-}
-
-App.defaultProps = {
-  name: 'No-name',
 }
 
 export default App;
