@@ -4,51 +4,55 @@ class App extends React.Component {
 
   constructor() {
     super();
+
     this.state = {
-      message: 'event demo',
+      users: [1,2],
     }
   }
 
-  update(e) {
-    this.setState({
-      message: e.type,
-    })
+  UNSAFE_componentWillMount() {
+    fetch( 'https://jsonplaceholder.typicode.com/users' )
+    .then( response => response.json() )
+    .then( json => this.setState({users: json}))
+  }
+
+  setFilter(e) {
+    this.setState({filter: e.target.value})
   }
 
   render() {
+    let users = this.state.users;
+    if(this.state.filter) {
+      users = users.filter( v => v.name.includes(this.state.filter));
+    }
+    console.log(this.state.filter);
     return (
       <div>
-        <h2>Event type {this.state.message}</h2> 
-       <input 
-          onChange={this.update.bind(this)} 
-          // onSelect={this.update.bind(this)} 
-          onFocus={this.update.bind(this)} 
-          onBlur={this.update.bind(this)} 
-          onCopy={this.update.bind(this)}  
-          onCut={this.update.bind(this)}  
-          onPaste={this.update.bind(this)} 
-          // onKeyDown={this.update.bind(this)} 
-          // onKeyPress={this.update.bind(this)} 
-          // onKeyUp={this.update.bind(this)} 
-          onClick={this.update.bind(this)} 
-          onContextMenu={this.update.bind(this)} 
-          onDoubleClick={this.update.bind(this)} 
-          // onMouseMove={this.update.bind(this)} 
-          // onMouseOut={this.update.bind(this)} 
-          // onMouseOver={this.update.bind(this)} 
-          // onMouseUp={this.update.bind(this)} 
-          onWheel={this.update.bind(this)}
-          onTouchCancel={this.update.bind(this)}
-          onTouchEnd={this.update.bind(this)}
-          onTouchMove={this.update.bind(this)}
-          onTouchStart={this.update.bind(this)}
-
-       />
+        <input onChange={this.setFilter.bind(this)} />  
+        {users.map( (v,i) => <UserWidget key={i} user={v} /> )}
       </div>
     )
   }
 }
 
+const UserWidget = (props) =>
+      <div>
+        <h2>{props.user.name}</h2>
+        <p><strong>username: </strong>{props.user.username}</p>      
+        <p><strong>email: </strong>{props.user.email}</p>      
+      </div>
 
+
+// class UserWidget extends React.Component {
+//   render(){
+//     return (
+//       <div>
+//         <h2>{this.props.user.name}</h2>
+//         <p><strong>username: </strong>{this.props.user.username}</p>      
+//         <p><strong>email: </strong>{this.props.user.email}</p>      
+//       </div>
+//     )
+//   }
+// }
 
 export default App;
